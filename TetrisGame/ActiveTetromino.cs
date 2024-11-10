@@ -13,7 +13,6 @@ namespace TetrisGame
 {
     //COLIN 11/8: active tetromino class. currently has horizontal movement, soft dropping, locking, and rotation
     /* TODO:
-     * converting tpiece calls into a TetrominoData array
      * holding
      * randomization
      * ghost piece,
@@ -42,14 +41,11 @@ namespace TetrisGame
             rotation = 0;
             positionx = 5;
             positiony = -1;
-            if (minotype == 2)
-            {
                 for (int i = 0; i < 4; i++)
                 {
-                    minoposx[i] = ((sbyte)(positionx + (TetrominoData.tpiece.minoxdata[0][i])));
-                    minoposy[i] = ((sbyte)(positiony + (TetrominoData.tpiece.minoydata[0][i])));
+                    minoposx[i] = ((sbyte)(positionx + (TetrominoData.tetdataArr[minotype].minoxdata[0][i])));
+                    minoposy[i] = ((sbyte)(positiony + (TetrominoData.tetdataArr[minotype].minoydata[0][i])));
                 }
-            }
         }
         //COLIN 11/8: tests if you can move left or right. returns true if you can, false if you cant. there could be some optimization with testing points redundantly, but likely insignificant
         public bool TryMoveX(bool left)
@@ -160,19 +156,16 @@ namespace TetrisGame
             rotation = 0;
             positionx = 5;
             positiony = -1;
-            //COLIN 11/8: temporary code because not all tetrominoes are implemented yet. should just read from tetromino data array
-            if (minotype == 2)
-            {
+            //COLIN 11/10: temporary code removed. replaced with array.
                 //COLIN 11/8: probably shouldnt be updating the drawing code from outside DrawingStuff, but this is not a permanent graphics solution anyways
                 for (int i = 0; i < 4; i++)
                 {
                     DrawingStuff.activeDrawArr[i].Visibility = Visibility.Hidden;
                     Grid.SetColumn(DrawingStuff.activeDrawArr[i], 0);
                     Grid.SetRow(DrawingStuff.activeDrawArr[i], 0);
-                    minoposx[i] = ((sbyte)(positionx + (TetrominoData.tpiece.minoxdata[0][i])));
-                    minoposy[i] = ((sbyte)(positiony + (TetrominoData.tpiece.minoydata[0][i])));
+                    minoposx[i] = ((sbyte)(positionx + (TetrominoData.tetdataArr[minotype].minoxdata[0][i])));
+                    minoposy[i] = ((sbyte)(positiony + (TetrominoData.tetdataArr[minotype].minoydata[0][i])));
                 }
-            }
             
         }
         //COLIN 11/8: checks if rotation is possible in the given direction. tests all srs points. returns the number of the successful rotation, or 9 (arbitrary value) if unsuccessful
@@ -208,14 +201,14 @@ namespace TetrisGame
             //loop through all 5 srs points
             for(int i = 0; i < 5; i++)
             {
-                testpointx = (sbyte)(positionx + TetrominoData.tpiece.srsxpoints[startrot][i] - TetrominoData.tpiece.srsxpoints[endrot][i]);
-                testpointy = (sbyte)(positiony + TetrominoData.tpiece.srsypoints[startrot][i] - TetrominoData.tpiece.srsypoints[endrot][i]);
+                testpointx = (sbyte)(positionx + TetrominoData.tetdataArr[minotype].srsxpoints[startrot][i] - TetrominoData.tetdataArr[minotype].srsxpoints[endrot][i]);
+                testpointy = (sbyte)(positiony + TetrominoData.tetdataArr[minotype].srsypoints[startrot][i] - TetrominoData.tetdataArr[minotype].srsypoints[endrot][i]);
                 Debug.WriteLine("testing srs point {0} with x = {1} y = {2}", i, testpointx, testpointy);
                 //looping through all 4 minos in this rotation point. breaking from the j loop means the rotation failed. saves time from continuing to test points after the rotation is already deemed invalid
                 for (int j = 0; j < 4; j++)
                 {
-                    testminox = (sbyte)(testpointx + TetrominoData.tpiece.minoxdata[endrot][j]);
-                    testminoy = (sbyte)(testpointy + TetrominoData.tpiece.minoydata[endrot][j]);
+                    testminox = (sbyte)(testpointx + TetrominoData.tetdataArr[minotype].minoxdata[endrot][j]);
+                    testminoy = (sbyte)(testpointy + TetrominoData.tetdataArr[minotype].minoydata[endrot][j]);
                     //immediately fail if out of bounds of the board. prevents attempting to read from array indexes that dont exist
                     if(testminox >= 10 || testminox <= -1 || testminoy >= 20)
                     {
@@ -282,12 +275,12 @@ namespace TetrisGame
                     endrot = 3;
                 }
             }
-            srspointx = (sbyte)(positionx + TetrominoData.tpiece.srsxpoints[startrot][srsnum] - TetrominoData.tpiece.srsxpoints[endrot][srsnum]);
-            srspointy = (sbyte)(positiony + TetrominoData.tpiece.srsypoints[startrot][srsnum] - TetrominoData.tpiece.srsypoints[endrot][srsnum]);
+            srspointx = (sbyte)(positionx + TetrominoData.tetdataArr[minotype].srsxpoints[startrot][srsnum] - TetrominoData.tetdataArr[minotype].srsxpoints[endrot][srsnum]);
+            srspointy = (sbyte)(positiony + TetrominoData.tetdataArr[minotype].srsypoints[startrot][srsnum] - TetrominoData.tetdataArr[minotype].srsypoints[endrot][srsnum]);
             for(int i = 0; i < 4; i++)
             {
-                newx = (sbyte)(srspointx + TetrominoData.tpiece.minoxdata[endrot][i]);
-                newy = (sbyte)(srspointy + TetrominoData.tpiece.minoydata[endrot][i]);
+                newx = (sbyte)(srspointx + TetrominoData.tetdataArr[minotype].minoxdata[endrot][i]);
+                newy = (sbyte)(srspointy + TetrominoData.tetdataArr[minotype].minoydata[endrot][i]);
                 minoposx[i] = newx;
                 minoposy[i] = newy;
                 //COLIN 11/8: probably shouldnt be updating the drawing code from outside DrawingStuff, but this is not a permanent graphics solution anyways
