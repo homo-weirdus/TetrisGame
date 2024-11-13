@@ -22,6 +22,7 @@ namespace TetrisGame
         //COLIN 11/8: board data values based on the TetrominoIDs of the tetrominos that place them
         public ActiveTetromino curtet;
         public static byte[][] board = new byte[10][];
+        private Randomizer randomizer;
         //COLIN 11/8: this is kinda bleh but I cant really improve it until more of the game is in place
         public GameLogic()
         {
@@ -30,7 +31,8 @@ namespace TetrisGame
             {
                 board[i] = new byte[20];
             }
-            curtet = new ActiveTetromino(2);
+            randomizer = new Randomizer();
+            curtet = new ActiveTetromino(randomizer.NextPiece());
         }
         //COLIN 11/8: pretty empty for now but will grow as new things get added.
         public void startGame()
