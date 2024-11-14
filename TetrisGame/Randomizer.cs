@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace TetrisGame
      * */
 
     //Rebeca 11/12: Added the randomizer class and integrated with GameLogic.cs
-    internal class Randomizer
+    public class Randomizer
     {
         private List<byte> bag;
         private Queue<byte> nextQueue;
@@ -33,6 +34,7 @@ namespace TetrisGame
         }
         private void RefillBag()
         {
+            
             bag.Clear();
             for (byte i = 1; i <= 7; i++)
             {
@@ -46,11 +48,15 @@ namespace TetrisGame
         }
         public byte GetNextPiece()
         {
+            byte gotten;
+
             if (bag.Count == 0)
             {
                 RefillBag();
             }
-            return bag[0];
+            gotten = bag[0];
+            bag.RemoveAt(0);
+            return gotten;
         }
         private void InitializeQueue()
         {

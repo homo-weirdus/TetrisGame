@@ -44,10 +44,12 @@ namespace TetrisGame
                 activeDrawArr[k] = new Rectangle();
                 activeDrawArr[k].VerticalAlignment = VerticalAlignment.Stretch;
                 activeDrawArr[k].HorizontalAlignment = HorizontalAlignment.Stretch;
-                activeDrawArr[k].Fill = Brushes.Purple;
+                activeDrawArr[k].Fill = brusharr[((MainWindow)Application.Current.MainWindow).mainLogic.curtet.minotype];
                 activeDrawArr[k].Visibility = Visibility.Hidden;
+
                 Grid.SetColumn(activeDrawArr[k], 0);
                 Grid.SetRow(activeDrawArr[k], 0);
+
                 ((MainWindow)Application.Current.MainWindow).BoardGrid.Children.Add(activeDrawArr[k]);
             }
         }

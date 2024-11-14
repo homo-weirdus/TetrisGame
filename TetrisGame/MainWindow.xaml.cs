@@ -58,7 +58,7 @@ namespace TetrisGame
             else if(e.Key == Key.Space)
             {
                 ((MainWindow)Application.Current.MainWindow).mainLogic.curtet.LockActive();
-                ((MainWindow)Application.Current.MainWindow).mainLogic.curtet.NextPiece(2);
+                ((MainWindow)Application.Current.MainWindow).mainLogic.curtet.NextPiece(mainLogic.randomizer.NextPiece());
             }
             else if(e.Key == Key.X)
             {

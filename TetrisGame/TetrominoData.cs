@@ -32,7 +32,7 @@ namespace TetrisGame
          new TetrominoData(new sbyte[][] {new sbyte[] {0,0,-1,1}, new sbyte[] {0, 1,0, 1}, new sbyte[] {0, 0, 1, -1 }, new sbyte[] {0,-1,0,-1} },
             new sbyte[][] { new sbyte[] { 0,-1,0,-1 }, new sbyte[] { 0, 0,-1,1}, new sbyte[] { 0,1,0,1 }, new sbyte[] { 0,0,1,-1 } }),
          new TetrominoData(new sbyte[][] {new sbyte[] {0,0,1,-1}, new sbyte[] {0, 1,0, 1}, new sbyte[] {0, 0, -1, 1 }, new sbyte[] {0,-1,0,-1} },
-            new sbyte[][] { new sbyte[] { 0,-1,0,-1 }, new sbyte[] { 0, 0,1,-1}, new sbyte[] { 0,0,0,1 }, new sbyte[] { 0,1,-1,1 } })
+            new sbyte[][] { new sbyte[] { 0,-1,0,-1 }, new sbyte[] { 0, 0,1,-1}, new sbyte[] { 0,1,0,1 }, new sbyte[] { 0,0,-1,1 } })
         };
         //COLIN 11/10: this is old and not used but kept commented in case I need it again.
        /* public static TetrominoData tpiece = new TetrominoData(new sbyte[][] {new sbyte[] {0,-1,1,0}, new sbyte[] {0, 0,0, 1}, new sbyte[] {0, 1, -1, 0 }, new sbyte[] {0,0,0,-1} },

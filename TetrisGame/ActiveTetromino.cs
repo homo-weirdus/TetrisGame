@@ -126,6 +126,7 @@ namespace TetrisGame
                     Grid.SetRow(DrawingStuff.activeDrawArr[i], minoposy[i]);
                     Grid.SetColumn(DrawingStuff.activeDrawArr[i], minoposx[i]);
                     DrawingStuff.activeDrawArr[i].Visibility = System.Windows.Visibility.Visible;
+
                 }
                 else if (minoposy[i] > 0)
                 {
@@ -161,7 +162,8 @@ namespace TetrisGame
                 for (int i = 0; i < 4; i++)
                 {
                     DrawingStuff.activeDrawArr[i].Visibility = Visibility.Hidden;
-                    Grid.SetColumn(DrawingStuff.activeDrawArr[i], 0);
+                DrawingStuff.activeDrawArr[i].Fill = DrawingStuff.brusharr[minotype];
+                Grid.SetColumn(DrawingStuff.activeDrawArr[i], 0);
                     Grid.SetRow(DrawingStuff.activeDrawArr[i], 0);
                     minoposx[i] = ((sbyte)(positionx + (TetrominoData.tetdataArr[minotype].minoxdata[0][i])));
                     minoposy[i] = ((sbyte)(positiony + (TetrominoData.tetdataArr[minotype].minoydata[0][i])));
