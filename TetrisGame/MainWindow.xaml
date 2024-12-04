@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TetrisGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" KeyDown="Window_KeyDown">
+        Title="MainWindow" Height="500" Width="800" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <Grid>
-        <Grid x:Name="BoardGrid" HorizontalAlignment="Left" Height="400" Margin="10,43,0,0" VerticalAlignment="Top" Width="200" Grid.IsSharedSizeScope="True" MinWidth="15" MinHeight="15">
+        <Grid x:Name="BoardGrid" HorizontalAlignment="Left" Height="400" Margin="100,43,0,0" VerticalAlignment="Top" Width="200" Grid.IsSharedSizeScope="True" MinWidth="15" MinHeight="15">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -45,6 +45,23 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
         </Grid>
+        <Image x:Name="holdimg" HorizontalAlignment="Left" Height="68" Margin="0,43,0,0" VerticalAlignment="Top" Width="85" Source="/empty.png" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+        <Grid x:Name="nextgrid" HorizontalAlignment="Left" Height="371" Margin="326,43,0,0" VerticalAlignment="Top" Width="100"/>
+        <TextBlock x:Name="scoretext" HorizontalAlignment="Left" Margin="458,366,0,0" TextWrapping="Wrap" Text="0000000000" VerticalAlignment="Top" Height="48" Width="151" FontSize="20" FontFamily="Consolas" FontWeight="Bold" Cursor=""/>
+        <TextBlock x:Name="leveltext" HorizontalAlignment="Left" Margin="458,315,0,0" TextWrapping="Wrap" Text="Level: 01" VerticalAlignment="Top" Height="46" Width="129" FontFamily="Consolas" FontSize="24" FontWeight="Bold"/>
+        <TextBlock x:Name="linestext" HorizontalAlignment="Left" Margin="458,243,0,0" TextWrapping="Wrap" Text="lines cleared: 0000" VerticalAlignment="Top" Height="42" Width="140" FontFamily="Consolas" FontSize="18" FontWeight="Bold"/>
+        <Button x:Name="savebutton" Content="Save game" HorizontalAlignment="Left" Height="66" Margin="146,116,0,0" VerticalAlignment="Top" Width="106" FontFamily="Consolas" FontWeight="Bold" FontSize="18" RenderTransformOrigin="0.5,0.5" Click="savebutton_Click" Visibility="Hidden" IsEnabled="False">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform X="1"/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
+        <Button x:Name="LoadButton" Content="Load Game" HorizontalAlignment="Left" Height="57" Margin="147,228,0,0" VerticalAlignment="Top" Width="106" FontFamily="Consolas" FontSize="18" FontWeight="Bold" Click="LoadButton_Click" IsEnabled="False" Visibility="Hidden"/>
+        <Button x:Name="newbut" Content="New Game" HorizontalAlignment="Left" Height="75" Margin="129,315,0,0" VerticalAlignment="Top" Width="142" FontFamily="Consolas" FontSize="18" FontWeight="Bold" Click="newbut_Click" Visibility="Hidden" IsEnabled="False"/>
 
     </Grid>
 </Window>

@@ -35,6 +35,9 @@ namespace TetrisGame
         public byte rotation = 0;
         public sbyte[] minoposx = new sbyte[4];
         public sbyte[] minoposy = new sbyte[4];
+        public sbyte ghostpos = 19;
+        public bool istspin;
+        public bool ismini;
         //COLIN 11/8: this constructor should only be called once or twice. use the curtet variable in GameLogic with ((MainWindow)Application.Current.MainWindow).mainLogic.curtet if you need to use the active tetromino in another file
         public ActiveTetromino(byte piecetype) {
             minotype = piecetype;
@@ -59,13 +62,13 @@ namespace TetrisGame
             {
                 if ((minoposx[i] + diroffset) < 0 || (minoposx[i] + diroffset) > 9)
                 {
-                    Debug.WriteLine("failed wall check");
+                    //Debug.WriteLine("failed wall check");
                     return false;
                 }
                 //dont check collision above the board. just stops errors from being thrown when trying to read from a negative array index. since nothing should be there anyways it would always be true
                 if (minoposy[i] >= 0)
                 {
-                    if (GameLogic.board[(minoposx[i] + diroffset)][minoposy[i]] != 0)
+                    if (GameLogic.board[minoposy[i]][(minoposx[i] + diroffset)] != 0)
                     {
                         return false;
                     }
@@ -75,17 +78,32 @@ namespace TetrisGame
             return true;
         }
         //COLIN 11/8:tests if you can soft drop. returns true if you can. false otherwise. can be reused for gravity code. higher prioity for optimization than TryMoveX since it will get called more
-        public bool TrySoftDrop() {
+        public bool TrySoftDrop(bool ghost = false) {
+            sbyte[] checkys = new sbyte[4];
+            if(ghost == true)
+            {
+                for(int j = 0; j < 4; j++)
+                {
+                    checkys[j] = (sbyte)(minoposy[j] - positiony + ghostpos);
+                }
+            }
+            else
+            {
+                for (int k = 0; k < 4; k++)
+                {
+                    checkys[k] = (sbyte)(minoposy[k]);
+                }
+            }
             for (int i = 0; i < 4; i++)
             {
                 //dont check collision above the board. just stops errors from being thrown from attemting to read at a negative array index
-                if (minoposy[i] >= -1)
+                if (checkys[i] >= -1)
                 {
-                    if (minoposy[i] == 19)
+                    if (checkys[i] == 19)
                     {
                         return false;
                     }
-                    else if (GameLogic.board[(minoposx[i])][minoposy[i] + 1] != 0)
+                    else if (GameLogic.board[checkys[i] + 1][minoposx[i]] != 0)
                     {
                         return false;
                     }
@@ -111,6 +129,9 @@ namespace TetrisGame
                     Grid.SetColumn(DrawingStuff.activeDrawArr[i], minoposx[i]);
                 }
             }
+            istspin = false;
+            ismini = false;
+            updateGhost();
             Debug.WriteLine("moved");
         }
         //COLIN 11/8: soft drops the piece DOES NOT TEST IF VALID MOVE
@@ -133,17 +154,51 @@ namespace TetrisGame
                     Grid.SetRow(DrawingStuff.activeDrawArr[i], minoposy[i]);
                 }
             }
+            istspin = false;
+            ismini = false;
         }
         //COLIN 11/8: locks the tetromino in its current position. does not go to the next tetromino or test line clearing
         //TODO: return array of bytes that are rows that need to be tested for line clearing
         public void LockActive()
         {
+            bool gameover = false;
+            int canlineclear;
             //COLIN 11/8: probably shouldnt be updating the drawing code from outside DrawingStuff, but this is not a permanent graphics solution anyways
             for (int i = 0; i < 4; i++)
             {
-                GameLogic.board[(minoposx[i])][minoposy[i]] = minotype;
-                DrawingStuff.boardDrawArr[(minoposx[i])][minoposy[i]].Fill = DrawingStuff.brusharr[minotype];
+                if (minoposy[i] >= 0)
+                {
+                    GameLogic.board[(minoposy[i])][minoposx[i]] = minotype;
+                    DrawingStuff.boardDrawArr[(minoposy[i])][minoposx[i]].Fill = DrawingStuff.brusharr[minotype];
+                    if (minoposy[i] < GameLogic.highestfillrow)
+                    {
+                        GameLogic.highestfillrow = (byte)minoposy[i];
+                    }
+                    GameLogic.clearcheck[i] = minoposy[i];
+                }
+                else
+                {
+                    gameover = true;
+                    break;
+                }
             }
+            if (gameover == false)
+            {
+                canlineclear = ((MainWindow)Application.Current.MainWindow).mainLogic.testLineClear();
+                if (canlineclear != 0)
+                {
+                    ((MainWindow)Application.Current.MainWindow).mainLogic.clearLine();
+                    DrawingStuff.updateboard();
+                    GameLogic.highestfillrow += (byte)GameLogic.numclear;
+
+                }
+                GameLogic.canhold = true;
+            }
+            else
+            {
+                ((MainWindow)Application.Current.MainWindow).mainLogic.gameover();
+            }
+
         }
         //COLIN 11/8: resets position, rotation, minotype, and minopos arrays with the tetrominoID of nexttype.
         /*TODO: 
@@ -153,22 +208,31 @@ namespace TetrisGame
          */
         public void NextPiece(byte nexttype)
         {
-            minotype = nexttype;
-            rotation = 0;
-            positionx = 5;
-            positiony = -1;
-            //COLIN 11/10: temporary code removed. replaced with array.
+            if (MainWindow.gameover == false)
+            {
+                minotype = nexttype;
+                rotation = 0;
+                positionx = 5;
+                positiony = -1;
+                GameLogic.clearcheck = new sbyte[4] { 0, 0, 0, 0 };
+                GameLogic.numclear = 0;
+                GameLogic.passedclear = new bool[4] { false, false, false, false };
+                //COLIN 11/10: temporary code removed. replaced with array.
                 //COLIN 11/8: probably shouldnt be updating the drawing code from outside DrawingStuff, but this is not a permanent graphics solution anyways
                 for (int i = 0; i < 4; i++)
                 {
                     DrawingStuff.activeDrawArr[i].Visibility = Visibility.Hidden;
-                DrawingStuff.activeDrawArr[i].Fill = DrawingStuff.brusharr[minotype];
-                Grid.SetColumn(DrawingStuff.activeDrawArr[i], 0);
+                    DrawingStuff.activeDrawArr[i].Fill = DrawingStuff.brusharr[minotype];
+                    Grid.SetColumn(DrawingStuff.activeDrawArr[i], 0);
                     Grid.SetRow(DrawingStuff.activeDrawArr[i], 0);
                     minoposx[i] = ((sbyte)(positionx + (TetrominoData.tetdataArr[minotype].minoxdata[0][i])));
                     minoposy[i] = ((sbyte)(positiony + (TetrominoData.tetdataArr[minotype].minoydata[0][i])));
+                    DrawingStuff.ghostDrawArr[i].Stroke = DrawingStuff.brusharr[minotype];
                 }
-            
+                istspin = false;
+                ismini = false;
+                updateGhost();
+            }
         }
         //COLIN 11/8: checks if rotation is possible in the given direction. tests all srs points. returns the number of the successful rotation, or 9 (arbitrary value) if unsuccessful
         public int TryRotate(bool rotRight)
@@ -226,7 +290,7 @@ namespace TetrisGame
                     else
                     {
                         //only break if the board space is filled
-                        if(GameLogic.board[(testminox)][testminoy] == 0)
+                        if(GameLogic.board[(testminoy)][testminox] == 0)
                         {
 
                         }
@@ -254,6 +318,7 @@ namespace TetrisGame
         //COLIN 11/8: rotates the tetromino in the given direction with the given srs rotation DOES NOT VERIFY IF ROTATION IS VALID
         public void RotateDir(bool rotRight, int srsnum)
         {
+
             //most of these variables behave similarly as in TryRotate
             int startrot = rotation;
             int endrot;
@@ -261,6 +326,11 @@ namespace TetrisGame
             sbyte srspointy;
             sbyte newx;
             sbyte newy;
+            sbyte[] tspinx;
+            sbyte[] tspiny;
+            bool[] solidspin;
+            istspin = false;
+            ismini = false;
             if (rotRight)
             {
                 endrot = startrot + 1;
@@ -300,6 +370,131 @@ namespace TetrisGame
             positionx = srspointx;
             positiony = srspointy;
             rotation = (byte)endrot;
+            if(minotype == 2)
+            {
+                if(srsnum == 5)
+                {
+                    istspin = true;
+                }
+                else
+                {
+                    solidspin = new bool[4];
+                    if(rotation == 0)
+                    {
+                        tspinx = new sbyte[4] { -1, 1, -1, 1 };
+                        tspiny = new sbyte[4] { -1, -1, 1, 1 };
+                    } 
+                    else if(rotation == 1)
+                    {
+                        tspinx = new sbyte[4] { 1, 1, -1, -1 };
+                        tspiny = new sbyte[4] { -1, 1, -1, 1 };
+                    }
+                    else if(rotation == 2)
+                    {
+                        tspinx = new sbyte[4] { -1, 1, -1, 1 };
+                        tspiny = new sbyte[4] { 1, 1, -1, -1 };
+                    }
+                    else
+                    {
+                        tspinx = new sbyte[4] { -1, -1, 1, 1 };
+                        tspiny = new sbyte[4] { -1, 1, -1, 1 };
+                    }
+                    for(int j = 0; j < 4; j++)
+                    {
+                        tspinx[j] += positionx;
+                        tspiny[j] += positiony;
+                        if (tspinx[j] == -1 || tspinx[j] == 10 || tspiny[j] == 20)
+                        {
+                            solidspin[j] = true;
+                        }
+                        else if(tspiny[j] < 0)
+                        {
+                            solidspin[j] = false;
+                        }
+                        else
+                        {
+                            if (GameLogic.board[tspiny[j]][tspinx[j]] == 0)
+                            {
+                                solidspin[j] = false;
+                            }
+                            else
+                            {
+                                solidspin[j] = true;
+                            }    
+                        }
+                    }
+                    if ((solidspin[0] == true && solidspin[1] == true) && (solidspin[2] == true || solidspin[3] == true))
+                    {
+                        istspin = true;
+                    }
+                    else if((solidspin[2] == true && solidspin[3] == true) && (solidspin[0] == true || solidspin[1] == true))
+                    {
+                        ismini = true;
+                    }
+                }
+            }
+            updateGhost();
+        }
+        public void updateGhost()
+        {
+            bool ghostplace = false;
+            bool softcheck = false;
+            ghostpos = (sbyte)(GameLogic.highestfillrow - 2);
+            ghostpos = Math.Max(ghostpos, positiony);
+            while(ghostplace == false)
+            {
+                softcheck = TrySoftDrop(true);
+                if(softcheck == true)
+                {
+                    ghostpos += 1;
+                }
+                else
+                {
+                    ghostplace = true;
+                }
+            }
+            DrawingStuff.drawghost();
+            if(ghostpos == positiony)
+            {
+                ((MainWindow)Application.Current.MainWindow).mainLogic.lockdowntimer.Stop();
+                ((MainWindow)Application.Current.MainWindow).mainLogic.lockdowntimer.Start();
+            }
+            else if(GameLogic.gravstopped == true)
+            {
+                ((MainWindow)Application.Current.MainWindow).mainLogic.lockdowntimer.Stop();
+                ((MainWindow)Application.Current.MainWindow).mainLogic.gravtimer.Start();
+                GameLogic.gravstopped = false;
+            }
+        }
+        public void HardDrop()
+        {
+            if(positiony != ghostpos)
+            {
+                istspin = false;
+                ismini = false;
+            }
+            positiony = ghostpos;
+            for(int i = 0; i < 4; i++)
+            {
+                minoposy[i] = ((sbyte)(positiony + (TetrominoData.tetdataArr[minotype].minoydata[rotation][i])));
+            }
+            LockActive();
+        }
+        public void HoldTet()
+        {
+            byte temptrans;
+            if(GameLogic.holdtype == 0)
+            {
+                GameLogic.holdtype = minotype;
+                NextPiece(((MainWindow)Application.Current.MainWindow).mainLogic.randomizer.NextPiece());
+            }
+            else
+            {
+                temptrans = GameLogic.holdtype;
+                GameLogic.holdtype = minotype;
+                NextPiece(temptrans);
+            }
+            GameLogic.canhold = false;
         }
     }
 }

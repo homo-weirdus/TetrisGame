@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace TetrisGame
 {
@@ -21,9 +22,9 @@ namespace TetrisGame
     //Rebeca 11/12: Added the randomizer class and integrated with GameLogic.cs
     public class Randomizer
     {
-        private List<byte> bag;
-        private Queue<byte> nextQueue;
-        private const int QueueSize = 3; // Change this if you want more pieces in the queue
+        public List<byte> bag;
+        public Queue<byte> nextQueue;
+        private const int QueueSize = 5; // Change this if you want more pieces in the queue
         private static readonly Random random = new Random();
         public Randomizer()
         {
@@ -69,11 +70,22 @@ namespace TetrisGame
         {
             byte nextPiece = nextQueue.Dequeue();
             nextQueue.Enqueue(GetNextPiece());
+            updateDraw();
             return nextPiece;
         }
         public byte[] GetNextQueue()
         {
             return nextQueue.ToArray();
+        }
+        public void updateDraw()
+        {
+            if (DrawingStuff.urishortcut[3] != null)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    DrawingStuff.nextdrawarr[i].Source = new BitmapImage(DrawingStuff.urishortcut[nextQueue.ElementAt(i)]);
+                }
+            }
         }
     }
 
