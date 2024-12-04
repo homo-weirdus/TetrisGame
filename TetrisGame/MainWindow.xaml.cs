@@ -55,7 +55,7 @@ namespace TetrisGame
 
             if (gameover == false && paused == false)
             {
-                if (e.Key == Key.Left)
+                if (e.Key == Key.Left || e.Key == Key.A)
                 {
                     if (leftheld == false)
                     {
@@ -67,7 +67,7 @@ namespace TetrisGame
                         lefttime = new Timer(movle, leftreset, 200, 50);
                     }
                 }
-                else if (e.Key == Key.Right)
+                else if (e.Key == Key.Right || e.Key == Key.D)
                 {
                     if (rightheld == false)
                     {
@@ -83,7 +83,7 @@ namespace TetrisGame
 
                     }
                 }
-                else if (e.Key == Key.Down)
+                else if (e.Key == Key.Down || e.Key == Key.S)
                 {
                     if (downheld == false)
                     {
@@ -155,20 +155,20 @@ namespace TetrisGame
             if (gameover == false && paused == false)
             {
                 //Debug.WriteLine("keyup");
-                if (e.Key == Key.Right)
+                if (e.Key == Key.Right || e.Key == Key.D)
                 {
                     rightheld = false;
                     //Debug.WriteLine("canceled");
                     righttime.Dispose();
 
                 }
-                else if (e.Key == Key.Left)
+                else if (e.Key == Key.Left || e.Key == Key.A)
                 {
                     leftheld = false;
                     //Debug.WriteLine("canceled");
                     lefttime.Dispose();
                 }
-                else if (e.Key == Key.Down)
+                else if (e.Key == Key.Down || e.Key == Key.S)
                 {
                     downheld = false;
                     //Debug.WriteLine("canceled");
