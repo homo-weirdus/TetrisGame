@@ -105,7 +105,7 @@ namespace TetrisGame
                     rottest = ((MainWindow)Application.Current.MainWindow).mainLogic.curtet.TryRotate(true);
                     if (rottest != 9)
                     {
-                        Debug.WriteLine("rotaaate");
+                        //Debug.WriteLine("rotaaate");
                         ((MainWindow)Application.Current.MainWindow).mainLogic.curtet.RotateDir(true, rottest);
                     }
                 }
@@ -154,18 +154,18 @@ namespace TetrisGame
         {
             if (gameover == false && paused == false)
             {
-                Debug.WriteLine("keyup");
+                //Debug.WriteLine("keyup");
                 if (e.Key == Key.Right)
                 {
                     rightheld = false;
-                    Debug.WriteLine("canceled");
+                    //Debug.WriteLine("canceled");
                     righttime.Dispose();
 
                 }
                 else if (e.Key == Key.Left)
                 {
                     leftheld = false;
-                    Debug.WriteLine("canceled");
+                    //Debug.WriteLine("canceled");
                     lefttime.Dispose();
                 }
                 else if (e.Key == Key.Down)

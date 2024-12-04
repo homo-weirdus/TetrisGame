@@ -111,7 +111,7 @@ namespace TetrisGame
                 {
                     for(int k = 0; k < 10; k++)
                     {
-                        Debug.WriteLine("testing {0} in line {1}", k, GameLogic.clearcheck[i]);
+                        //Debug.WriteLine("testing {0} in line {1}", k, GameLogic.clearcheck[i]);
                         if (GameLogic.board[GameLogic.clearcheck[i]][k] == 0)
                         {
                             failedcheck = true;
@@ -129,7 +129,7 @@ namespace TetrisGame
                     }
                 }
             }
-            Debug.WriteLine("{0} passed clear", linessuc);
+            //Debug.WriteLine("{0} passed clear", linessuc);
             numclear = linessuc;
             return linessuc;
         }
@@ -169,7 +169,7 @@ namespace TetrisGame
                 }
                 if (targar < 0)
                 {
-                    Debug.WriteLine("clearing {0}", j);
+                   // Debug.WriteLine("clearing {0}", j);
                     board[j] = new byte[10];
                 }
                 else

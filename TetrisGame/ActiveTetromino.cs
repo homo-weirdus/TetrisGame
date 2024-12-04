@@ -74,7 +74,7 @@ namespace TetrisGame
                     }
                 }
             }
-            Debug.WriteLine("passed test");
+            //Debug.WriteLine("passed test");
             return true;
         }
         //COLIN 11/8:tests if you can soft drop. returns true if you can. false otherwise. can be reused for gravity code. higher prioity for optimization than TryMoveX since it will get called more
@@ -109,7 +109,7 @@ namespace TetrisGame
                     }
                 }
             }
-            Debug.WriteLine("passed test");
+            //Debug.WriteLine("passed test");
             return true;
         }
         //COLIN 11/8: moves the tetromino left or right based on the boolean DOES NOT TEST IF IT IS A VALID MOVE. do not call if you have not verified the movement is possible
@@ -132,7 +132,7 @@ namespace TetrisGame
             istspin = false;
             ismini = false;
             updateGhost();
-            Debug.WriteLine("moved");
+           // Debug.WriteLine("moved");
         }
         //COLIN 11/8: soft drops the piece DOES NOT TEST IF VALID MOVE
         public void softDrop()
@@ -269,7 +269,7 @@ namespace TetrisGame
             {
                 testpointx = (sbyte)(positionx + TetrominoData.tetdataArr[minotype].srsxpoints[startrot][i] - TetrominoData.tetdataArr[minotype].srsxpoints[endrot][i]);
                 testpointy = (sbyte)(positiony + TetrominoData.tetdataArr[minotype].srsypoints[startrot][i] - TetrominoData.tetdataArr[minotype].srsypoints[endrot][i]);
-                Debug.WriteLine("testing srs point {0} with x = {1} y = {2}", i, testpointx, testpointy);
+                //Debug.WriteLine("testing srs point {0} with x = {1} y = {2}", i, testpointx, testpointy);
                 //looping through all 4 minos in this rotation point. breaking from the j loop means the rotation failed. saves time from continuing to test points after the rotation is already deemed invalid
                 for (int j = 0; j < 4; j++)
                 {
@@ -278,7 +278,7 @@ namespace TetrisGame
                     //immediately fail if out of bounds of the board. prevents attempting to read from array indexes that dont exist
                     if(testminox >= 10 || testminox <= -1 || testminoy >= 20)
                     {
-                        Debug.WriteLine("failed at bounds test");
+                        //Debug.WriteLine("failed at bounds test");
                         failedrot = true;
                         break;
                     }
@@ -296,7 +296,7 @@ namespace TetrisGame
                         }
                         else
                         {
-                            Debug.WriteLine("failed at board check");
+                            //Debug.WriteLine("failed at board check");
                             failedrot = true;
                             break;
                         }
@@ -305,7 +305,7 @@ namespace TetrisGame
                 //if failedrot is true that means the rotation failed and the next point needs to be tested
                 if (failedrot == false)
                 {
-                    Debug.WriteLine("succeeded rotation with srs point {0}", i);
+                    //Debug.WriteLine("succeeded rotation with srs point {0}", i);
                     return i;
                 }
                 else
