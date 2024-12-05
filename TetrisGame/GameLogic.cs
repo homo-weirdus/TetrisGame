@@ -82,8 +82,8 @@ namespace TetrisGame
             gravreset = new AutoResetEvent(false);
             gravtimer = new DispatcherTimer();
             lockdowntimer = new DispatcherTimer();
-            gravtimer.Interval = TimeSpan.FromMilliseconds(800);
-            lockdowntimer.Interval = TimeSpan.FromMilliseconds(800);
+            gravtimer.Interval = TimeSpan.FromMilliseconds(1000);
+            lockdowntimer.Interval = TimeSpan.FromMilliseconds(500);
             gravtimer.Tick += gravity;
             lockdowntimer.Tick += lockdown;
             gravtimer.Start();
@@ -182,7 +182,7 @@ namespace TetrisGame
             if(((level+1)*10) <= totalcleared && level != 14)
             {
                 level += 1;
-                gravinterval = (800 - (level * 7));
+                gravinterval = (int)(Math.Pow((800 - (level * 7)), (level))/100);
                 if(MainWindow.downheld == false)
                 {
                     gravtimer.Interval = TimeSpan.FromMilliseconds(gravinterval);
