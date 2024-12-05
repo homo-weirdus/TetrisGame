@@ -304,7 +304,7 @@ namespace TetrisGame
                         break;
                     }
                 }
-                GameLogic.gravinterval = (800 - (GameLogic.level * 7));
+                GameLogic.gravinterval = (int)((Math.Pow((float)(800 - (GameLogic.level * 7)) / 1000, (GameLogic.level)) * 1000));
                 ((MainWindow)Application.Current.MainWindow).mainLogic.gravtimer.Interval = TimeSpan.FromMilliseconds(GameLogic.gravinterval);
                 ((MainWindow)Application.Current.MainWindow).mainLogic.curtet.NextPiece(minotsav);
             }

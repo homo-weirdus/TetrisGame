@@ -182,7 +182,7 @@ namespace TetrisGame
             if(((level+1)*10) <= totalcleared && level != 14)
             {
                 level += 1;
-                gravinterval = (int)(Math.Pow((800 - (level * 7)), (level))/100);
+                gravinterval = (int) ((Math.Pow((float)(800 - (level * 7))/1000, (level))*1000));
                 if(MainWindow.downheld == false)
                 {
                     gravtimer.Interval = TimeSpan.FromMilliseconds(gravinterval);
